@@ -1,0 +1,66 @@
+// src/pages/UserProfile.jsx
+import { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import axiosInstance from '../utils/axios';
+import { useAuth } from '../context/AuthContext';
+import { Trophy, MapPin } from 'lucide-react';
+
+export default function UserProfile() {
+  const { id } = useParams();
+  const { user: currentUser } = useAuth();
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    axiosInstance.get(`/user/profile/${id}`)
+      .then(res => setProfile(res.data))
+      .catch(err => {
+        setError(err.response?.data?.message || 'User not found');
+      })
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin" /></div>;
+  if (error) return <div className="min-h-screen flex items-center justify-center text-red-400">{error}</div>;
+
+  // ব্যাজ দেখাবে যদি প্রোফাইলের role 'admin' হয়
+  const showAdminBadge = profile.role === 'admin';
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="min-h-screen pt-24 pb-16 px-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="glass-card p-8 mb-8 text-center">
+          <img src={profile.profilePic || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=0ea5e9&color=fff&size=128`} alt={profile.name} className="w-32 h-32 rounded-full object-cover ring-4 ring-cyan-500 mx-auto" />
+          <h1 className="text-2xl font-bold text-white mt-4 flex items-center justify-center gap-2">
+            {profile.name}
+            {showAdminBadge && <span className="bg-gradient-to-r from-red-600 to-orange-500 text-white text-xs px-3 py-1 rounded-full shadow-md">Administrator</span>}
+          </h1>
+          <p className="text-gray-400">{profile.email}</p>
+          {profile.bio && <p className="text-gray-300 mt-2">{profile.bio}</p>}
+          {profile.location && <p className="text-gray-500 text-sm mt-1 flex items-center justify-center gap-1"><MapPin size={14} /> {profile.location}</p>}
+        </div>
+
+        <div className="glass-card p-8">
+          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2"><Trophy size={20} /> Registered Tournaments</h2>
+          {profile.registeredTournaments?.length === 0 ? (
+            <p className="text-gray-400">{profile.name} hasn't joined any tournaments yet.</p>
+          ) : (
+            <div className="space-y-3">
+              {profile.registeredTournaments.map(t => (
+                <div key={t._id} className="bg-white/5 rounded-xl p-4 flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-white">{t.title}</p>
+                    <p className="text-xs text-gray-400">{t.game} • {new Date(t.date).toLocaleDateString()}</p>
+                  </div>
+                  <Link to={`/tournaments/${t._id}`} className="text-cyan-400 text-sm hover:underline">View</Link>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
