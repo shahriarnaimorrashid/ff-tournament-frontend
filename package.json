@@ -1,36 +1,35 @@
 {
   "name": "ff-tournament-frontend",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^5.2.2",
     "axios": "^1.15.0",
     "canvas-confetti": "^1.9.4",
+    "cloudinary": "^2.9.0",
     "firebase": "^12.12.0",
     "framer-motion": "^12.38.0",
     "i18next": "^26.0.6",
     "i18next-browser-languagedetector": "^8.2.1",
     "lucide-react": "^1.8.0",
+    "multer": "^2.1.1",
     "react": "^19.2.4",
     "react-countdown": "^2.3.6",
     "react-dom": "^19.2.4",
-    "react-hook-form": "^7.72.1",
+    "react-hook-form": "^7.71.1",
     "react-hot-toast": "^2.6.0",
-    "react-i18next": "^17.0.4",
-    "react-is": "^18.3.1",
-    "react-loading-skeleton": "^3.5.0",
+    "react-i18next": "^16.8.1",
+    "react-intersection-observer": "^10.0.0",
     "react-router-dom": "^7.14.1",
     "recharts": "^3.8.1",
     "socket.io-client": "^4.8.3",
-    "vite-plugin-pwa": "^1.5.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
@@ -46,6 +45,7 @@
     "postcss": "^8.5.10",
     "tailwindcss": "^3.4.19",
     "vite": "^8.0.4",
+    "vite-plugin-pwa": "^1.5.0",
     "workbox-window": "^7.4.0"
   }
 }
