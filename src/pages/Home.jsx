@@ -9,11 +9,15 @@ import axiosInstance from '../utils/axios';
 export default function Home() {
   const { t } = useTranslation();
   const [aboutText, setAboutText] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axiosInstance.get('/admin/settings')
-      .then(res => setAboutText(res.data.aboutUsText))
-      .catch(() => {});
+    axiosInstance.get('/admin/public-settings')
+      .then(res => {
+        setAboutText(res.data.aboutUsText || '');
+      })
+      .catch(err => console.error('Failed to load site settings', err))
+      .finally(() => setLoading(false));
   }, []);
 
   const features = [
@@ -22,6 +26,14 @@ export default function Home() {
     { icon: <Shield className="w-6 h-6 text-green-400" />, titleKey: 'Secure Escrow', descKey: 'Safe transactions with escrow protection' },
     { icon: <Sparkles className="w-6 h-6 text-pink-400" />, titleKey: 'Daily Rewards', descKey: 'Earn coins and exclusive rewards' },
   ];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-950 to-black">
+        <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-16">
