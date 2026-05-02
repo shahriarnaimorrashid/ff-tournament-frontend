@@ -1,4 +1,4 @@
-// src/pages/Home.jsx – Ultimate Gaming Vibe with Thunder, Color‑Shift & Performance
+// src/pages/Home.jsx
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -6,9 +6,17 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Trophy, Users, Shield, Sparkles, ArrowRight, Swords, Gamepad2 } from 'lucide-react';
 import axiosInstance from '../utils/axios';
 
-// ──────────────────────────────────────
-// OPTIMISED COUNTER (lightweight)
-// ──────────────────────────────────────
+// ⚡ থান্ডার স্ট্রম ব্যাকগ্রাউন্ড
+const ThunderBackground = () => (
+  <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
+    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/70" />
+    <div className="absolute top-[10%] left-[20%] w-0.5 h-32 bg-cyan-300 rounded-full shadow-[0_0_30px_10px_rgba(0,255,255,0.8)] rotate-12 opacity-0 animate-lightning1" />
+    <div className="absolute top-[5%] right-[30%] w-0.5 h-24 bg-cyan-300 rounded-full shadow-[0_0_25px_8px_rgba(0,255,255,0.7)] -rotate-12 opacity-0 animate-lightning2" />
+    <div className="absolute bottom-[15%] left-[60%] w-0.5 h-28 bg-blue-300 rounded-full shadow-[0_0_20px_7px_rgba(0,180,255,0.6)] rotate-6 opacity-0 animate-lightning3" />
+  </div>
+);
+
+// 🔢 অপটিমাইজড কাউন্টার
 const Counter = ({ end, label, Icon }) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
@@ -32,9 +40,7 @@ const Counter = ({ end, label, Icon }) => {
   );
 };
 
-// ──────────────────────────────────────
-// FEATURE CARD (memoised)
-// ──────────────────────────────────────
+// 🎮 ফিচার কার্ড
 const FeatureCard = ({ icon, title, desc, index }) => (
   <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-30px' }}
     transition={{ delay: index * 0.08, duration: 0.4, ease: 'easeOut' }}
@@ -49,33 +55,21 @@ const FeatureCard = ({ icon, title, desc, index }) => (
   </motion.div>
 );
 
-// ──────────────────────────────────────
-// ⚡ THUNDER STORM LIGHTNING EFFECT
-// ──────────────────────────────────────
-const ThunderBackground = () => (
-  <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-    {/* Dark storm overlay */}
-    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/70" />
-    {/* Lightning flashes – random bright flashes using CSS animation */}
-    <div className="absolute top-[10%] left-[20%] w-0.5 h-32 bg-cyan-300 rounded-full shadow-[0_0_30px_10px_rgba(0,255,255,0.8)] rotate-12 opacity-0 animate-lightning1" />
-    <div className="absolute top-[5%] right-[30%] w-0.5 h-24 bg-cyan-300 rounded-full shadow-[0_0_25px_8px_rgba(0,255,255,0.7)] -rotate-12 opacity-0 animate-lightning2" />
-    <div className="absolute bottom-[15%] left-[60%] w-0.5 h-28 bg-blue-300 rounded-full shadow-[0_0_20px_7px_rgba(0,180,255,0.6)] rotate-6 opacity-0 animate-lightning3" />
-    {/* More subtle branch flashes */}
-    <div className="absolute top-[25%] left-[5%] w-0.5 h-16 bg-purple-300 rounded-full shadow-[0_0_15px_5px_rgba(168,85,247,0.5)] rotate-[30deg] opacity-0 animate-lightning1" />
-    <div className="absolute bottom-[20%] right-[10%] w-0.5 h-20 bg-cyan-300 rounded-full shadow-[0_0_20px_6px_rgba(0,255,255,0.6)] rotate-[15deg] opacity-0 animate-lightning2" />
-  </div>
-);
-
-// ──────────────────────────────────────
-// HOME PAGE
-// ──────────────────────────────────────
+// 📍 মেইন হোম পেজ
 export default function Home() {
   const { t } = useTranslation();
   const [settings, setSettings] = useState(null);
   const heroRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
 
+  // মোবাইল ডিটেক্ট (mouse parallax disable)
+  useEffect(() => {
+    setIsMobile(/Mobi|Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent));
+  }, []);
+
+  // 🖱️ প্যারালাক্স – শুধু ডেস্কটপে
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 40 : 80]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
   const heroSpringY = useSpring(heroY, { stiffness: 70, damping: 22, restDelta: 0.5 });
@@ -97,20 +91,15 @@ export default function Home() {
 
   return (
     <div className="min-h-screen text-white">
-      {/* ==================== HERO SECTION ==================== */}
+      {/* ── HERO SECTION ── */}
       <motion.section ref={heroRef} style={{ y: heroSpringY, opacity: heroOpacity, scale: heroScale }}
         className="relative min-h-[100vh] flex items-center justify-center overflow-hidden isolate will-change-transform">
 
-        {/* ⚡ THUNDER STORM BACKGROUND */}
         <ThunderBackground />
-
-        {/* Static dark base */}
         <div className="absolute inset-0 bg-[#03040a] z-0" />
-
-        {/* Gaming grid */}
         <div className="absolute inset-0 z-0 opacity-[0.06]" style={{ backgroundImage: 'linear-gradient(rgba(0,255,255,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.2) 1px, transparent 1px)', backgroundSize: '44px 44px' }} />
 
-        {/* Floating dust (4 particles only) */}
+        {/* ⚪ ফ্লোটিং ডাস্ট */}
         <div className="absolute inset-0 z-10 pointer-events-none">
           {[...Array(4)].map((_, i) => (
             <motion.div key={i} className="absolute w-1 h-1 bg-cyan-400/30 rounded-full"
@@ -120,17 +109,16 @@ export default function Home() {
           ))}
         </div>
 
-        {/* CONTENT */}
         <div className="max-w-7xl mx-auto px-4 text-center z-20">
-          {/* Logo */}
+          {/* 🎮 গেমিং আইকন */}
           <motion.div initial={{ opacity: 0, scale: 0.4 }} animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 140, damping: 10 }}
             className="mb-6 inline-flex p-3 rounded-full bg-white/5 backdrop-blur-md border border-white/10 shadow-[0_0_30px_rgba(0,255,255,0.15)]">
             <Gamepad2 className="w-10 h-10 md:w-12 md:h-12 text-cyan-400" />
           </motion.div>
 
+          {/* 🔠 টাইটেল (কালার শিফটিং, গ্লো সহ) */}
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
-            {/* ===== MAIN TITLE WITH COLOR SHIFTING ANIMATION ===== */}
             <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight leading-[0.9] mb-6">
               {'E-SPORTS'.split('').map((char, i) => (
                 <motion.span key={i}
@@ -161,7 +149,7 @@ export default function Home() {
             </motion.p>
           </motion.div>
 
-          {/* CTA buttons */}
+          {/* CTA বাটন */}
           <motion.div initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5, duration: 0.5 }}
             className="flex flex-wrap justify-center gap-4 mt-10">
@@ -180,7 +168,7 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
+        {/* 📜 স্ক্রল ইন্ডিকেটর */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2">
           <span className="text-gray-500 text-[10px] uppercase tracking-[0.2em]">Scroll</span>
@@ -190,7 +178,7 @@ export default function Home() {
         </motion.div>
       </motion.section>
 
-      {/* ==================== FEATURES ==================== */}
+      {/* ── FEATURES ── */}
       <section className="py-20 max-w-7xl mx-auto px-4 relative">
         <motion.h2 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-80px' }}
           className="text-3xl md:text-5xl font-black text-center mb-14 uppercase tracking-tight">
@@ -201,7 +189,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== LIVE STATS ==================== */}
+      {/* ── LIVE STATS ── */}
       <section className="py-20 border-t border-white/5 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/[0.03] via-purple-500/[0.03] to-pink-500/[0.03]" />
         <div className="max-w-7xl mx-auto px-4 relative z-10">
@@ -214,7 +202,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== HOT DROPS ==================== */}
+      {/* ── HOT DROPS ── */}
       <section className="py-20 max-w-7xl mx-auto px-4">
         <motion.h2 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-80px' }}
           className="text-3xl md:text-5xl font-black text-center mb-12 uppercase tracking-tight">
@@ -244,7 +232,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== FOOTER ==================== */}
+      {/* ── ABOUT US FOOTER ── */}
       {settings?.aboutUsText && (
         <footer className="border-t border-white/10 pt-16 pb-8 mt-16 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
