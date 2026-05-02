@@ -6,7 +6,7 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Trophy, Users, Shield, Sparkles, ArrowRight, Swords, Gamepad2 } from 'lucide-react';
 import axiosInstance from '../utils/axios';
 
-// ===================== Animated Counter (optimized) =====================
+// ===================== Optimized Animated Counter =====================
 const Counter = ({ end, label, Icon }) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
@@ -18,7 +18,7 @@ const Counter = ({ end, label, Icon }) => {
         if (entry.isIntersecting) {
           let start = 0;
           const duration = 1500;
-          const steps = 30;
+          const steps = 20;
           const increment = Math.ceil(end / steps);
           let current = 0;
           const timer = setInterval(() => {
@@ -45,7 +45,7 @@ const Counter = ({ end, label, Icon }) => {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      className="text-center"
+      className="text-center will-change-transform"
     >
       <div className="text-3xl md:text-4xl font-black text-white mb-1 tabular-nums">
         {count}<span className="text-cyan-400">+</span>
@@ -56,7 +56,7 @@ const Counter = ({ end, label, Icon }) => {
   );
 };
 
-// ===================== Feature Card =====================
+// ===================== Feature Card (memoized props) =====================
 const FeatureCard = ({ icon, title, desc, index }) => (
   <motion.div
     initial={{ opacity: 0, y: 30, scale: 0.95 }}
@@ -81,18 +81,18 @@ export default function Home() {
   const [settings, setSettings] = useState(null);
   const heroRef = useRef(null);
 
-  // Scroll progress for hero parallax
+  // Scroll‑linked parallax (GPU‑accelerated properties)
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start'],
   });
 
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, 150]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
 
-  // Mount hero spring for smooth animation
-  const heroSpringY = useSpring(heroY, { stiffness: 80, damping: 20 });
+  // Spring‑smooth the parallax, no jank
+  const heroSpringY = useSpring(heroY, { stiffness: 80, damping: 25, restDelta: 0.5 });
 
   useEffect(() => {
     axiosInstance.get('/admin/public-settings')
@@ -100,7 +100,7 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
-  // Features data memoized
+  // Static feature list – no wasted renders
   const features = useMemo(() => [
     { icon: <Trophy className="w-7 h-7 md:w-8 md:h-8 text-yellow-400 drop-shadow-glow" />, title: 'Pro Tournaments', desc: 'Real prizes, real competition' },
     { icon: <Users className="w-7 h-7 md:w-8 md:h-8 text-purple-400 drop-shadow-glow" />, title: '10K+ Players', desc: 'Massive gaming community' },
@@ -119,48 +119,55 @@ export default function Home() {
         style={{ y: heroSpringY, opacity: heroOpacity, scale: heroScale }}
         className="relative min-h-[100vh] flex items-center justify-center overflow-hidden isolate will-change-transform"
       >
-        {/* Background Layers */}
+        {/* Static background layers for zero runtime cost */}
         <div className="absolute inset-0 bg-[#03040a] z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-cyan-950/30 via-transparent to-black" />
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-900/20 via-transparent to-transparent" />
         </div>
 
-        {/* Grid overlay */}
-        <div className="absolute inset-0 z-0 opacity-[0.07]" style={{ backgroundImage: 'linear-gradient(rgba(0,255,255,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.2) 1px, transparent 1px)', backgroundSize: '50px 50px' }} />
+        {/* Gaming grid – pure CSS, no JS */}
+        <div
+          className="absolute inset-0 z-0 opacity-[0.06]"
+          style={{
+            backgroundImage: 'linear-gradient(rgba(0,255,255,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.2) 1px, transparent 1px)',
+            backgroundSize: '44px 44px'
+          }}
+        />
 
-        {/* Floating particles reduced for low-end */}
+        {/* Floating particles – reduced to 6 for low‑end devices, only opacity/transform used */}
         <div className="absolute inset-0 z-10 pointer-events-none">
-          {[...Array(8)].map((_, i) => (
+          {[...Array(6)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-1 h-1 bg-cyan-400/60 rounded-full"
+              className="absolute w-1 h-1 bg-cyan-400/40 rounded-full"
               style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
-              animate={{ y: [0, -60, 0], opacity: [0, 1, 0] }}
-              transition={{ duration: 3 + Math.random() * 5, repeat: Infinity, delay: Math.random() * 3 }}
+              animate={{ y: [0, -60, 0], opacity: [0, 0.7, 0] }}
+              transition={{ duration: 4 + Math.random() * 5, repeat: Infinity, delay: Math.random() * 3 }}
             />
           ))}
         </div>
 
-        {/* Content */}
+        {/* Hero content */}
         <div className="max-w-7xl mx-auto px-4 text-center z-20">
-          {/* Gaming Logo */}
+          {/* Gaming controller icon */}
           <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 150 }}
-            className="mb-6 inline-flex p-3 rounded-full bg-white/5 backdrop-blur-md border border-white/10 shadow-[0_0_30px_rgba(0,255,255,0.15)]"
+            transition={{ delay: 0.2, type: 'spring', stiffness: 150, damping: 12 }}
+            className="mb-6 inline-flex p-3 rounded-full bg-white/5 backdrop-blur-md border border-white/10 shadow-[0_0_30px_rgba(0,255,255,0.1)]"
           >
-            <Gamepad2 className="w-10 h-10 md:w-14 md:h-14 text-cyan-400" />
+            <Gamepad2 className="w-10 h-10 md:w-12 md:h-12 text-cyan-400" />
           </motion.div>
 
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
-            <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight leading-[0.9] mb-6">
+            {/* Animated title – each character appears with a 3D flip */}
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight leading-[0.9] mb-6">
               {'E-SPORTS'.split('').map((char, i) => (
                 <motion.span
                   key={i}
                   initial={{ opacity: 0, y: 30, rotateX: -70 }}
                   animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                  transition={{ delay: 0.3 + i * 0.04, type: 'spring', stiffness: 120 }}
+                  transition={{ delay: 0.3 + i * 0.04, type: 'spring', stiffness: 120, damping: 10 }}
                   className="inline-block text-white drop-shadow-[0_0_12px_rgba(0,255,255,0.5)]"
                 >
                   {char === ' ' ? '\u00A0' : char}
@@ -169,7 +176,7 @@ export default function Home() {
               <br />
               <span className="relative inline-block mt-2">
                 <span className="absolute -inset-2 bg-gradient-to-r from-cyan-400 to-purple-600 blur-lg opacity-50"></span>
-                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-purple-300">
+                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-purple-300 text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
                   {heroTitle}
                 </span>
               </span>
@@ -187,7 +194,7 @@ export default function Home() {
             </motion.p>
           </motion.div>
 
-          {/* CTA */}
+          {/* Call to action */}
           <motion.div
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
@@ -251,7 +258,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== Stats Counter ==================== */}
+      {/* ==================== Live Stats ==================== */}
       <section className="py-20 border-t border-white/5 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/[0.03] via-purple-500/[0.03] to-pink-500/[0.03]" />
         <div className="max-w-7xl mx-auto px-4 relative z-10">
@@ -304,7 +311,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== Footer ==================== */}
+      {/* ==================== About Us Footer ==================== */}
       {settings?.aboutUsText && (
         <footer className="border-t border-white/10 pt-16 pb-8 mt-16 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
