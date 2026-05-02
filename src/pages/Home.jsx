@@ -12,6 +12,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // পাবলিক রুট থেকে ডাটা আনা (কোনো অথ লাগবে না)
     axiosInstance.get('/admin/public-settings')
       .then(res => {
         setAboutText(res.data.aboutUsText || '');
