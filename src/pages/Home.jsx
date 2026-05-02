@@ -2,22 +2,11 @@
 import { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Trophy, Users, Shield, Sparkles, ArrowRight, ChevronDown } from 'lucide-react';
 import axiosInstance from '../utils/axios';
 
-// ===================== 1. Staggered Text Animation =====================
-const HeroText = ({ children }) => (
-  <motion.span
-    initial={{ opacity: 0, y: 60 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="block"
-  >
-    {children}
-  </motion.span>
-);
-
-// ===================== 2. Animated Counter =====================
+// ===================== Animated Counter =====================
 const Counter = ({ end, label, icon: Icon }) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
@@ -31,12 +20,8 @@ const Counter = ({ end, label, icon: Icon }) => {
           const increment = Math.ceil(end / 100);
           const timer = setInterval(() => {
             start += increment;
-            if (start >= end) {
-              setCount(end);
-              clearInterval(timer);
-            } else {
-              setCount(start);
-            }
+            if (start >= end) { setCount(end); clearInterval(timer); }
+            else setCount(start);
           }, duration / (end / increment));
           observer.disconnect();
         }
@@ -56,16 +41,14 @@ const Counter = ({ end, label, icon: Icon }) => {
       transition={{ duration: 0.6 }}
       className="text-center"
     >
-      <div className="text-4xl md:text-5xl font-bold text-white mb-2">
-        {count}{count > 100 ? 'K+' : '+'}
-      </div>
+      <div className="text-4xl md:text-5xl font-bold text-white mb-2">{count}+</div>
       <Icon className="w-6 h-6 mx-auto mb-1 text-cyan-400" />
       <p className="text-gray-400 uppercase tracking-wider text-xs">{label}</p>
     </motion.div>
   );
 };
 
-// ===================== 3. Feature Card =====================
+// ===================== Feature Card =====================
 const FeatureCard = ({ icon, title, desc, index }) => (
   <motion.div
     initial={{ opacity: 0, y: 40 }}
@@ -84,7 +67,7 @@ const FeatureCard = ({ icon, title, desc, index }) => (
   </motion.div>
 );
 
-// ===================== 4. Main Home Component =====================
+// ===================== Main Home Component =====================
 export default function Home() {
   const { t } = useTranslation();
   const [settings, setSettings] = useState(null);
@@ -96,7 +79,7 @@ export default function Home() {
   });
 
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
-  const heroScale   = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
 
   useEffect(() => {
     axiosInstance.get('/admin/public-settings')
@@ -119,7 +102,7 @@ export default function Home() {
         style={{ opacity: heroOpacity, scale: heroScale }}
         className="relative min-h-[100vh] flex items-center justify-center overflow-hidden"
       >
-        {/* Background Elements */}
+        {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-radial from-cyan-900/30 via-transparent to-transparent pointer-events-none" />
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
@@ -130,32 +113,18 @@ export default function Home() {
             <motion.div
               key={i}
               className="absolute w-1 h-1 bg-white rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [0, -30, 0],
-                opacity: [0.2, 0.8, 0.2],
-              }}
-              transition={{
-                duration: 3 + Math.random() * 5,
-                repeat: Infinity,
-                delay: Math.random() * 2,
-              }}
+              style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
+              animate={{ y: [0, -30, 0], opacity: [0.2, 0.8, 0.2] }}
+              transition={{ duration: 3 + Math.random() * 5, repeat: Infinity, delay: Math.random() * 2 }}
             />
           ))}
         </div>
 
         <div className="max-w-7xl mx-auto px-4 text-center z-10">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
             <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-9xl font-extrabold leading-none tracking-tighter">
               <span className="text-gradient-primary">
-                <HeroText>{settings?.heroTitle || t('home.title')}</HeroText>
+                {settings?.heroTitle || t('home.title')}
               </span>
             </h1>
             <motion.p
@@ -231,7 +200,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== Latest Tournaments Teaser ==================== */}
+      {/* ==================== Hot Tournaments ==================== */}
       <section className="py-24 max-w-7xl mx-auto px-4">
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
@@ -241,7 +210,6 @@ export default function Home() {
         >
           <span className="text-gradient-primary">Hot Tournaments</span>
         </motion.h2>
-        {/* This can later be replaced with a live API call */}
         <div className="grid md:grid-cols-3 gap-8">
           {[1,2,3].map((_, idx) => (
             <motion.div
@@ -266,7 +234,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== About Us Footer (Dynamic) ==================== */}
+      {/* ==================== About Us Footer ==================== */}
       {settings?.aboutUsText && (
         <footer className="border-t border-white/10 pt-20 pb-10 mt-20 relative">
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
