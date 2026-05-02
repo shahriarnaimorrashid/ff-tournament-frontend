@@ -1,4 +1,4 @@
-// src/pages/Home.jsx – REFINED PREMIUM ANIMATIONS
+// src/pages/Home.jsx – Smooth, Automatic Animations (No Mouse Tracking)
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import axiosInstance from '../utils/axios';
 
-// ---------------------  স্মুথ ব্যাকগ্রাউন্ড ইফেক্ট ---------------------
+// ───── Ultra-smooth Thunder Storm ─────
 const ThunderStorm = () => (
   <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
     {[...Array(4)].map((_, i) => (
@@ -24,6 +24,7 @@ const ThunderStorm = () => (
   </div>
 );
 
+// ───── Floating Dust – low-count, soft ─────
 const FloatingDust = () => (
   <div className="absolute inset-0 z-10 pointer-events-none">
     {[...Array(18)].map((_, i) => (
@@ -43,6 +44,16 @@ const FloatingDust = () => (
   </div>
 );
 
+// ───── Automatic animated glow orb (no mouse) ─────
+const AutoGlowOrb = () => (
+  <motion.div
+    className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-cyan-500/15 rounded-full blur-[100px] pointer-events-none z-10"
+    animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
+    transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+  />
+);
+
+// ───── Scroll Prompt ─────
 const ScrollPrompt = () => (
   <motion.div
     initial={{ opacity: 0 }}
@@ -61,6 +72,7 @@ const ScrollPrompt = () => (
   </motion.div>
 );
 
+// ───── Live Ticker ─────
 const LiveTicker = ({ livePlayers }) => (
   <div className="sticky top-0 z-50 bg-black/95 border-b border-cyan-400/20 py-3.5 backdrop-blur-xl">
     <div className="max-w-7xl mx-auto px-6 flex justify-between text-xs md:text-sm font-mono">
@@ -73,6 +85,7 @@ const LiveTicker = ({ livePlayers }) => (
   </div>
 );
 
+// ───── Smooth Counter (RAF) ─────
 const Counter = ({ end, label, Icon, suffix }) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
@@ -125,7 +138,6 @@ const Home = () => {
   const [settings, setSettings] = useState(null);
   const [livePlayers, setLivePlayers] = useState(14280);
   const [isMobile, setIsMobile] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const heroRef = useRef(null);
 
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -140,11 +152,7 @@ const Home = () => {
   ], []);
 
   useEffect(() => { setIsMobile(/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)); }, []);
-  useEffect(() => {
-    const mousemove = e => setMousePos({ x: e.clientX, y: e.clientY });
-    window.addEventListener('mousemove', mousemove);
-    return () => window.removeEventListener('mousemove', mousemove);
-  }, []);
+
   useEffect(() => {
     const t = setInterval(() => setLivePlayers(p => p + Math.floor(Math.random() * 12) + 6), 3200);
     return () => clearInterval(t);
@@ -162,6 +170,7 @@ const Home = () => {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 60 : 120]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
   const heroSpringY = useSpring(heroY, { stiffness: 50, damping: 22 });
+  const heroSpringOpacity = useSpring(heroOpacity, { stiffness: 60, damping: 22 });
 
   const title = settings?.heroTitle || "THUNDER ARENA";
   const subtitle = settings?.heroSubtitle || "Where Legends Are Born • Bangladesh's Premier Esports Platform";
@@ -196,17 +205,14 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-[#02040b] text-white overflow-x-hidden">
-      {/* ── HERO ── */}
+      {/* ── HERO (SMOOTH, NO MOUSE) ── */}
       <motion.section
         ref={heroRef}
-        style={{ y: heroSpringY, opacity: heroOpacity }}
+        style={{ y: heroSpringY, opacity: heroSpringOpacity }}
         className="relative min-h-[100dvh] flex items-center justify-center isolate"
       >
         <div className="absolute inset-0 bg-gradient-to-b from-black via-[#0a0b1f] to-black z-0" />
-        <div
-          className="absolute inset-0 z-10 pointer-events-none opacity-35"
-          style={{ background: `radial-gradient(700px circle at ${mousePos.x}px ${mousePos.y}px, rgba(34,211,238,0.22), transparent 70%)` }}
-        />
+        <AutoGlowOrb />
         <ThunderStorm />
         <FloatingDust />
 
@@ -214,7 +220,7 @@ const Home = () => {
           <motion.h1
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
+            transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
             className="text-[clamp(2.8rem,8vw,7rem)] font-black uppercase tracking-[-3px] leading-[0.9] mb-6"
           >
             <span className="relative inline-block">
