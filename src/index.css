@@ -102,3 +102,39 @@
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
+/* Add this to your index.css or a separate stylesheet */
+@keyframes colorShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes lightning1 {
+  0%, 100% { opacity: 0; }
+  5% { opacity: 1; }
+  10% { opacity: 0; }
+  15% { opacity: 0.8; }
+  20% { opacity: 0; }
+  25% { opacity: 0.3; }
+  30% { opacity: 0; }
+}
+
+@keyframes lightning2 {
+  0%, 100% { opacity: 0; }
+  3% { opacity: 0.9; }
+  8% { opacity: 0; }
+  13% { opacity: 0.5; }
+  18% { opacity: 0; }
+  23% { opacity: 0.2; }
+  28% { opacity: 0; }
+}
+
+@keyframes lightning3 {
+  0%, 100% { opacity: 0; }
+  4% { opacity: 1; }
+  9% { opacity: 0; }
+  14% { opacity: 0.7; }
+  19% { opacity: 0; }
+  24% { opacity: 0.1; }
+  29% { opacity: 0; }
+}
