@@ -1,11 +1,11 @@
-// src/pages/Home.jsx – Fully Refined & Optimized Version
+// src/pages/Home.jsx – সর্বশেষ ভার্সন (Professional Footer + উন্নত অ্যানিমেশন)
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import {
   Trophy, Users, Shield, Sparkles, ArrowRight, Gamepad2, Flame, Star, Clock, Award,
-  Play, Pause, Crown, ChevronLeft, ChevronRight, Calendar
+  Play, Pause, Crown, ChevronLeft, ChevronRight, Calendar, Phone, Mail, MapPin, Smartphone
 } from 'lucide-react';
 import axiosInstance from '../utils/axios';
 
@@ -104,7 +104,7 @@ const Home = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const heroRef = useRef(null);
 
-  // Additional states for various sections
+  // States for various sections
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [activeFAQ, setActiveFAQ] = useState(null);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -116,19 +116,13 @@ const Home = () => {
     { name: "TahmidX", game: "Free Fire", comment: "Community is awesome. I've made so many friends here!" }
   ], []);
 
-  // Mobile detection
+  useEffect(() => { setIsMobile(/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)); }, []);
   useEffect(() => {
-    setIsMobile(/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent));
+    const onMouseMove = e => setMousePos({ x: e.clientX, y: e.clientY });
+    window.addEventListener('mousemove', onMouseMove);
+    return () => window.removeEventListener('mousemove', onMouseMove);
   }, []);
 
-  // Mouse position
-  useEffect(() => {
-    const handleMouseMove = (e) => setMousePos({ x: e.clientX, y: e.clientY });
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Live players counter
   useEffect(() => {
     const interval = setInterval(() => {
       setLivePlayers(prev => prev + Math.floor(Math.random() * 12) + 6);
@@ -136,21 +130,18 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Fetch settings
   useEffect(() => {
     axiosInstance.get('/admin/public-settings')
       .then(res => setSettings(res.data))
       .catch(() => {});
   }, []);
 
-  // Scroll to top button visibility
   useEffect(() => {
     const onScroll = () => setShowScrollTop(window.scrollY > 800);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Scroll animation
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"]
@@ -162,7 +153,6 @@ const Home = () => {
   const heroTitle = settings?.heroTitle || "THUNDER ARENA";
   const heroSubtitle = settings?.heroSubtitle || "Where Legends Are Born • Bangladesh's Premier Esports Platform";
 
-  // Features list
   const features = useMemo(() => [
     { icon: <Trophy className="w-12 h-12" />, title: "Pro Tournaments", desc: "Weekly & Monthly events with huge prize pools", color: "yellow" },
     { icon: <Users className="w-12 h-12" />, title: "15K+ Community", desc: "Join the fastest growing gaming community", color: "purple" },
@@ -170,14 +160,12 @@ const Home = () => {
     { icon: <Sparkles className="w-12 h-12" />, title: "Daily Rewards", desc: "Free coins, skins & battle pass rewards", color: "pink" },
   ], []);
 
-  // Hot drops data
   const hotDrops = useMemo(() => [
     { title: "FRIDAY NIGHT BRAWL", prize: "৳95,000", players: "64", game: "BGMI", status: "LIVE" },
     { title: "VALORANT MASTERS", prize: "৳1,45,000", players: "32", game: "Valorant", status: "2H LEFT" },
     { title: "FREE FIRE ROYALE", prize: "৳75,000", players: "50", game: "Free Fire", status: "LIVE" }
   ], []);
 
-  // Leaderboard data
   const leaderboard = useMemo(() => [
     { rank: 1, name: "RizGodBD", game: "BGMI", points: "12480", change: "+420" },
     { rank: 2, name: "SadiaReaper", game: "Valorant", points: "11890", change: "+380" },
@@ -186,7 +174,6 @@ const Home = () => {
     { rank: 5, name: "NinjaBD", game: "Valorant", points: "9340", change: "+180" },
   ], []);
 
-  // FAQ data
   const faqs = useMemo(() => [
     { q: "How do I participate in tournaments?", a: "Create an account, go to Tournaments section, and click 'Join' on any open event." },
     { q: "When do I receive my prize money?", a: "All prizes are disbursed within 24-72 hours via bKash, Nagad, or Bank Transfer." },
@@ -215,19 +202,20 @@ const Home = () => {
         <ParticleSystem />
 
         <div className="relative z-30 max-w-7xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
+          {/* 🔥 TITLE – উন্নত গ্রেডিয়েন্ট গ্লো */}
+          <motion.h1
+            initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className="mb-8 inline-flex items-center gap-4 px-8 py-3 bg-white/5 border border-cyan-400/30 rounded-full backdrop-blur-xl"
+            transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="text-[clamp(2.5rem,7vw,6.5rem)] font-black uppercase tracking-[-2px] leading-[0.92] mb-5 md:mb-6"
           >
-            <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
-            <span className="uppercase font-mono tracking-[4px] text-sm">SEASON 8 LIVE NOW</span>
-          </motion.div>
-
-          <h1 className="text-[4.8rem] md:text-[7rem] lg:text-[8.5rem] font-black tracking-[-5px] leading-[0.9] mb-6">
-            {heroTitle}
-          </h1>
+            <span className="relative inline-block">
+              <span className="absolute -inset-2 bg-gradient-to-r from-cyan-400/30 to-purple-500/30 blur-2xl opacity-60"></span>
+              <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-purple-300 animate-colorShift bg-[length:200%_200%] drop-shadow-[0_0_25px_rgba(0,255,255,0.5)]">
+                {heroTitle}
+              </span>
+            </span>
+          </motion.h1>
 
           <p className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-300 mb-12 font-light">
             {heroSubtitle}
@@ -257,7 +245,6 @@ const Home = () => {
         <ScrollIndicator />
       </motion.section>
 
-      {/* ==================== LIVE STATS BAR ==================== */}
       <LiveStatsBar livePlayers={livePlayers} />
 
       {/* ==================== FEATURES ==================== */}
@@ -490,9 +477,7 @@ const Home = () => {
           <p className="text-center text-gray-400 uppercase tracking-widest text-sm mb-10">POWERED BY</p>
           <div className="flex flex-wrap justify-center items-center gap-16 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
             {["Red Bull", "AMD", "Logitech", "PUBG MOBILE", "Razer", "bKash"].map((sponsor, i) => (
-              <div key={i} className="text-3xl font-bold tracking-wider hover:text-cyan-400 transition">
-                {sponsor}
-              </div>
+              <div key={i} className="text-3xl font-bold tracking-wider hover:text-cyan-400 transition">{sponsor}</div>
             ))}
           </div>
         </div>
@@ -546,52 +531,74 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ==================== FOOTER ==================== */}
-      <footer className="bg-black border-t border-white/10 pt-20 pb-12">
+      {/* ==================== PROFESSIONAL FOOTER ==================== */}
+      <footer className="bg-black/90 border-t border-white/10 pt-20 pb-12 relative">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12">
-            <div className="lg:col-span-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+            {/* Brand & Description */}
+            <div className="lg:col-span-1">
               <div className="flex items-center gap-3 mb-6">
                 <Gamepad2 className="w-10 h-10 text-cyan-400" />
                 <h3 className="text-3xl font-black tracking-tighter">{settings?.siteName || "THUNDER ARENA"}</h3>
               </div>
-              <p className="text-gray-400 max-w-md leading-relaxed">Bangladesh's most premium esports platform. Compete. Win. Dominate.</p>
-              <div className="mt-8 flex gap-5 text-2xl text-gray-400">
+              <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                {settings?.aboutUsText?.slice(0, 120) || "Bangladesh's most premium esports platform. Compete, win, and dominate the arena."}
+              </p>
+              <div className="flex gap-4 text-2xl text-gray-400">
                 <a href="#" className="hover:text-cyan-400 transition">𝕏</a>
                 <a href="#" className="hover:text-cyan-400 transition">📘</a>
                 <a href="#" className="hover:text-cyan-400 transition">📸</a>
                 <a href="#" className="hover:text-cyan-400 transition">𝔻</a>
               </div>
             </div>
+
+            {/* Company Links */}
             <div>
-              <h4 className="font-bold uppercase tracking-widest text-sm mb-6">PLATFORM</h4>
-              <ul className="space-y-4 text-gray-400">
-                <li><Link to="/tournaments" className="hover:text-white transition">Tournaments</Link></li>
-                <li><Link to="/dashboard" className="hover:text-white transition">Dashboard</Link></li>
-                <li><Link to="/wallet" className="hover:text-white transition">Wallet</Link></li>
-                <li><Link to="/leaderboard" className="hover:text-white transition">Leaderboard</Link></li>
+              <h4 className="font-bold uppercase tracking-widest text-sm mb-6 text-white/80">কোম্পানী</h4>
+              <ul className="space-y-3 text-sm text-gray-400">
+                <li><Link to="/about" className="hover:text-cyan-400 transition">আমাদের সম্পর্কে</Link></li>
+                <li><Link to="/refund-policy" className="hover:text-cyan-400 transition">রিফান্ড পলিসি</Link></li>
+                <li><Link to="/privacy-policy" className="hover:text-cyan-400 transition">প্রাইভেসি পলিসি</Link></li>
+                <li><Link to="/terms" className="hover:text-cyan-400 transition">টার্মস এবং কন্ডিশন</Link></li>
+                <li><Link to="/faq" className="hover:text-cyan-400 transition">এফ এ কিউ</Link></li>
+                <li><Link to="/notice" className="hover:text-cyan-400 transition">নোটিশ বোর্ড</Link></li>
               </ul>
             </div>
+
+            {/* Contact & Support */}
             <div>
-              <h4 className="font-bold uppercase tracking-widest text-sm mb-6">RESOURCES</h4>
-              <ul className="space-y-4 text-gray-400">
-                <li><a href="#" className="hover:text-white transition">Help Center</a></li>
-                <li><a href="#" className="hover:text-white transition">Rules & Regulations</a></li>
-                <li><a href="#" className="hover:text-white transition">Fair Play Policy</a></li>
-                <li><a href="#" className="hover:text-white transition">Contact Us</a></li>
+              <h4 className="font-bold uppercase tracking-widest text-sm mb-6 text-white/80">যোগাযোগ</h4>
+              <ul className="space-y-4 text-sm text-gray-400">
+                <li className="flex items-center gap-3">
+                  <Phone size={18} className="text-cyan-400 flex-shrink-0" />
+                  <span className="hover:text-white transition cursor-pointer">+8801646664222</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Mail size={18} className="text-cyan-400 flex-shrink-0" />
+                  <a href="mailto:contact@thunderarena.com" className="hover:text-white transition">contact@thunderarena.com</a>
+                </li>
+                <li className="flex items-start gap-3">
+                  <MapPin size={18} className="text-cyan-400 flex-shrink-0 mt-1" />
+                  <span className="hover:text-white transition leading-relaxed">
+                    House#32, Road#01, Metropolitan Co-operative Housing Society, Babar Rd, Dhaka 1207
+                  </span>
+                </li>
               </ul>
             </div>
+
+            {/* Download App */}
             <div>
-              <h4 className="font-bold uppercase tracking-widest text-sm mb-6">LEGAL</h4>
-              <ul className="space-y-4 text-gray-400">
-                <li><a href="#" className="hover:text-white transition">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition">Responsible Gaming</a></li>
-              </ul>
+              <h4 className="font-bold uppercase tracking-widest text-sm mb-6 text-white/80">ডাউনলোড করুন</h4>
+              <p className="text-gray-400 text-sm mb-5">আমাদের অ্যাপ ডাউনলোড করে যেকোনো জায়গা থেকে টুর্নামেন্ট খেলুন</p>
+              <a href="#" className="inline-flex items-center gap-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-6 py-3 rounded-2xl transition">
+                <Smartphone size={22} />
+                <span className="text-sm">Get on Android</span>
+              </a>
             </div>
           </div>
-          <div className="border-t border-white/10 mt-20 pt-8 text-center text-sm text-gray-500">
-            © 2026 {settings?.siteName || "Thunder Arena"} • All Rights Reserved • Made for Bangladeshi Gamers with ❤️
+
+          <div className="border-t border-white/10 mt-12 pt-8 text-center text-xs text-gray-500">
+            © 2026 {settings?.siteName || "Thunder Arena"} • সর্বস্বত্ব সংরক্ষিত • Built with ❤️ for Bangladeshi Gamers
           </div>
         </div>
       </footer>
