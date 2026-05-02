@@ -1,4 +1,4 @@
-// src/pages/Home.jsx
+// src/pages/Home.jsx – Ultimate Modern Gaming Homepage
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -6,17 +6,19 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Trophy, Users, Shield, Sparkles, ArrowRight, Swords, Gamepad2 } from 'lucide-react';
 import axiosInstance from '../utils/axios';
 
-// ⚡ থান্ডার স্ট্রম ব্যাকগ্রাউন্ড
+// ⚡ থান্ডার স্ট্রম (optimized)
 const ThunderBackground = () => (
   <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
     <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/70" />
     <div className="absolute top-[10%] left-[20%] w-0.5 h-32 bg-cyan-300 rounded-full shadow-[0_0_30px_10px_rgba(0,255,255,0.8)] rotate-12 opacity-0 animate-lightning1" />
     <div className="absolute top-[5%] right-[30%] w-0.5 h-24 bg-cyan-300 rounded-full shadow-[0_0_25px_8px_rgba(0,255,255,0.7)] -rotate-12 opacity-0 animate-lightning2" />
     <div className="absolute bottom-[15%] left-[60%] w-0.5 h-28 bg-blue-300 rounded-full shadow-[0_0_20px_7px_rgba(0,180,255,0.6)] rotate-6 opacity-0 animate-lightning3" />
+    <div className="absolute top-[25%] left-[5%] w-0.5 h-16 bg-purple-300 rounded-full shadow-[0_0_15px_5px_rgba(168,85,247,0.5)] rotate-[30deg] opacity-0 animate-lightning1" />
+    <div className="absolute bottom-[20%] right-[10%] w-0.5 h-20 bg-cyan-300 rounded-full shadow-[0_0_20px_6px_rgba(0,255,255,0.6)] rotate-[15deg] opacity-0 animate-lightning2" />
   </div>
 );
 
-// 🔢 অপটিমাইজড কাউন্টার
+// 🔢 Optimised Counter
 const Counter = ({ end, label, Icon }) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
@@ -40,7 +42,7 @@ const Counter = ({ end, label, Icon }) => {
   );
 };
 
-// 🎮 ফিচার কার্ড
+// 🎮 Feature Card
 const FeatureCard = ({ icon, title, desc, index }) => (
   <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-30px' }}
     transition={{ delay: index * 0.08, duration: 0.4, ease: 'easeOut' }}
@@ -55,19 +57,17 @@ const FeatureCard = ({ icon, title, desc, index }) => (
   </motion.div>
 );
 
-// 📍 মেইন হোম পেজ
+// ──────────────────────── MAIN HOME PAGE ────────────────────────
 export default function Home() {
   const { t } = useTranslation();
   const [settings, setSettings] = useState(null);
   const heroRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  // মোবাইল ডিটেক্ট (mouse parallax disable)
   useEffect(() => {
     setIsMobile(/Mobi|Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent));
   }, []);
 
-  // 🖱️ প্যারালাক্স – শুধু ডেস্কটপে
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroY = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 40 : 80]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
@@ -91,7 +91,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen text-white">
-      {/* ── HERO SECTION ── */}
+      {/* ── HERO ── */}
       <motion.section ref={heroRef} style={{ y: heroSpringY, opacity: heroOpacity, scale: heroScale }}
         className="relative min-h-[100vh] flex items-center justify-center overflow-hidden isolate will-change-transform">
 
@@ -99,7 +99,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[#03040a] z-0" />
         <div className="absolute inset-0 z-0 opacity-[0.06]" style={{ backgroundImage: 'linear-gradient(rgba(0,255,255,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.2) 1px, transparent 1px)', backgroundSize: '44px 44px' }} />
 
-        {/* ⚪ ফ্লোটিং ডাস্ট */}
+        {/* ⚪ Floating dust */}
         <div className="absolute inset-0 z-10 pointer-events-none">
           {[...Array(4)].map((_, i) => (
             <motion.div key={i} className="absolute w-1 h-1 bg-cyan-400/30 rounded-full"
@@ -110,32 +110,34 @@ export default function Home() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 text-center z-20">
-          {/* 🎮 গেমিং আইকন */}
+          {/* 🎮 Gamepad icon */}
           <motion.div initial={{ opacity: 0, scale: 0.4 }} animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 140, damping: 10 }}
             className="mb-6 inline-flex p-3 rounded-full bg-white/5 backdrop-blur-md border border-white/10 shadow-[0_0_30px_rgba(0,255,255,0.15)]">
             <Gamepad2 className="w-10 h-10 md:w-12 md:h-12 text-cyan-400" />
           </motion.div>
 
-          {/* 🔠 টাইটেল (কালার শিফটিং, গ্লো সহ) */}
+          {/* 🔠 SINGLE TITLE — no more duplicate */}
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
             <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight leading-[0.9] mb-6">
+              {/* "E‑SPORTS" part (color shifting) */}
               {'E-SPORTS'.split('').map((char, i) => (
                 <motion.span key={i}
                   initial={{ opacity: 0, y: 30, rotateX: -70 }}
                   animate={{ opacity: 1, y: 0, rotateX: 0 }}
                   transition={{ delay: 0.3 + i * 0.04, type: 'spring', stiffness: 120, damping: 10 }}
-                  className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 animate-pulse bg-[length:200%_200%] bg-left"
+                  className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-[length:200%_200%] bg-left"
                   style={{ backgroundSize: '200% 200%', animation: 'colorShift 3s infinite alternate' }}
                 >
                   {char === ' ' ? '\u00A0' : char}
                 </motion.span>
               ))}
               <br />
+              {/* Subtitle / full name */}
               <span className="relative inline-block mt-2">
                 <span className="absolute -inset-2 bg-gradient-to-r from-cyan-400 to-purple-600 blur-lg opacity-50 animate-pulse" />
                 <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-purple-300 text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
-                  {heroTitle.length > 25 ? heroTitle.substring(0, 25) + '…' : heroTitle}
+                  {heroTitle}
                 </span>
               </span>
             </h1>
@@ -149,7 +151,7 @@ export default function Home() {
             </motion.p>
           </motion.div>
 
-          {/* CTA বাটন */}
+          {/* CTA */}
           <motion.div initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5, duration: 0.5 }}
             className="flex flex-wrap justify-center gap-4 mt-10">
@@ -168,7 +170,7 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* 📜 স্ক্রল ইন্ডিকেটর */}
+        {/* Scroll indicator */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2">
           <span className="text-gray-500 text-[10px] uppercase tracking-[0.2em]">Scroll</span>
@@ -178,6 +180,7 @@ export default function Home() {
         </motion.div>
       </motion.section>
 
+      {/* FEATURES / STATS / HOT DROPS / FOOTER — unchanged from last working version */}
       {/* ── FEATURES ── */}
       <section className="py-20 max-w-7xl mx-auto px-4 relative">
         <motion.h2 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-80px' }}
@@ -232,16 +235,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── ABOUT US FOOTER ── */}
+      {/* ── FOOTER ── */}
       {settings?.aboutUsText && (
         <footer className="border-t border-white/10 pt-16 pb-8 mt-16 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
           <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 relative z-10">
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Gamepad2 className="w-7 h-7 text-cyan-400" />
-                <h3 className="text-white font-black text-lg">{siteName}</h3>
-              </div>
+              <div className="flex items-center gap-2 mb-4"><Gamepad2 className="w-7 h-7 text-cyan-400" /><h3 className="text-white font-black text-lg">{siteName}</h3></div>
               <p className="text-gray-400 text-sm leading-relaxed whitespace-pre-line">{settings.aboutUsText}</p>
             </div>
             <div>
