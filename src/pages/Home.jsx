@@ -12,7 +12,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // পাবলিক রুট থেকে ডাটা আনা (কোনো অথ লাগবে না)
     axiosInstance.get('/admin/public-settings')
       .then(res => {
         setAboutText(res.data.aboutUsText || '');
@@ -100,25 +99,45 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Us Section */}
+      {/* About Us Footer */}
       {aboutText && (
-        <section className="py-20 border-t border-white/10">
-          <div className="max-w-4xl mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                About <span className="text-gradient-primary">Us</span>
-              </h2>
-              <p className="text-gray-300 text-lg leading-relaxed whitespace-pre-line">
+        <footer className="border-t border-white/10 pt-16 pb-8 mt-20">
+          <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            <div>
+              <h3 className="text-white font-bold text-lg mb-3">E-Sports Arena</h3>
+              <p className="text-gray-400 text-sm leading-relaxed whitespace-pre-line">
                 {aboutText}
               </p>
-            </motion.div>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold mb-3">Quick Links</h3>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><Link to="/tournaments" className="hover:text-cyan-400 transition">Tournaments</Link></li>
+                <li><Link to="/dashboard" className="hover:text-cyan-400 transition">Dashboard</Link></li>
+                <li><Link to="/profile" className="hover:text-cyan-400 transition">Profile</Link></li>
+                <li><Link to="/wallet" className="hover:text-cyan-400 transition">Wallet</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold mb-3">Resources</h3>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-cyan-400 transition">Help Center</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition">Contact</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold mb-3">Follow Us</h3>
+              <div className="flex gap-3 text-gray-400">
+                <a href="#" className="hover:text-cyan-400 transition"><i className="fab fa-discord text-xl"></i></a>
+                <a href="#" className="hover:text-cyan-400 transition"><i className="fab fa-youtube text-xl"></i></a>
+                <a href="#" className="hover:text-cyan-400 transition"><i className="fab fa-twitter text-xl"></i></a>
+              </div>
+              <p className="text-gray-500 text-xs mt-4">© 2026 E-Sports Arena. All rights reserved.</p>
+            </div>
           </div>
-        </section>
+        </footer>
       )}
     </div>
   );
