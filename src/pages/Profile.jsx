@@ -44,6 +44,7 @@ export default function Profile() {
         name: data.name,
         bio: data.bio,
         location: data.location,
+        phone: data.phone,                  // ✅ নতুন: ফোন নম্বর পাঠানো
         social: {
           facebook: data['social.facebook'],
           instagram: data['social.instagram'],
@@ -51,7 +52,7 @@ export default function Profile() {
         }
       });
       setProfile(res.data);
-      updateUser({ name: res.data.name, profilePic: res.data.profilePic });
+      updateUser({ name: res.data.name, profilePic: res.data.profilePic, phone: res.data.phone }); // ✅ phone sync
       toast.success(t('profile.saved'));
     } catch (err) {
       toast.error(err.response?.data?.message || t('error.generic'));
@@ -188,6 +189,11 @@ export default function Profile() {
             <div>
               <label className="text-sm text-gray-300 block mb-2">{t('profile.location')}</label>
               <input {...register('location')} className="input-modern" placeholder={t('profile.location')} />
+            </div>
+            {/* ✅ নতুন ফোন ইনপুট */}
+            <div>
+              <label className="text-sm text-gray-300 block mb-2">Phone / WhatsApp</label>
+              <input {...register('phone')} className="input-modern" placeholder="01XXXXXXXXX" />
             </div>
             <div className="pt-4 border-t border-white/10">
               <p className="text-sm font-semibold text-gray-300 mb-4">{t('profile.socialLinks')}</p>
